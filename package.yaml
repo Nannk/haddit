@@ -1,6 +1,6 @@
 name:                haddit
 version:             0.1.0.0
-github:              "githubuser/haddit"
+github:              "Nannk/haddit"
 license:             BSD3
 author:              "Author name here"
 maintainer:          "example@example.com"
@@ -17,13 +17,15 @@ extra-source-files:
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
-description:         Please see the README on GitHub at <https://github.com/githubuser/haddit#readme>
+description:         Please see the README on GitHub at <https://github.com/Nannk/haddit#readme>
 
 dependencies:
 - base >= 4.7 && < 5
 - hip
 - brick
 - curl
+- vty
+- directory
 
 library:
   source-dirs: src

@@ -6,9 +6,9 @@ cabal-version: 1.12
 
 name:           haddit
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/haddit#readme>
-homepage:       https://github.com/githubuser/haddit#readme
-bug-reports:    https://github.com/githubuser/haddit/issues
+description:    Please see the README on GitHub at <https://github.com/Nannk/haddit#readme>
+homepage:       https://github.com/Nannk/haddit#readme
+bug-reports:    https://github.com/Nannk/haddit/issues
 author:         Author name here
 maintainer:     example@example.com
 copyright:      2022 Author name here
@@ -21,11 +21,12 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/haddit
+  location: https://github.com/Nannk/haddit
 
 library
   exposed-modules:
       Lib
+      Tui
   other-modules:
       Paths_haddit
   hs-source-dirs:
@@ -34,7 +35,9 @@ library
       base >=4.7 && <5
     , brick
     , curl
+    , directory
     , hip
+    , vty
   default-language: Haskell2010
 
 executable haddit-exe
@@ -48,8 +51,10 @@ executable haddit-exe
       base >=4.7 && <5
     , brick
     , curl
+    , directory
     , haddit
     , hip
+    , vty
   default-language: Haskell2010
 
 test-suite haddit-test
@@ -64,6 +69,8 @@ test-suite haddit-test
       base >=4.7 && <5
     , brick
     , curl
+    , directory
     , haddit
     , hip
+    , vty
   default-language: Haskell2010
