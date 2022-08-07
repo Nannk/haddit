@@ -5,9 +5,17 @@ import Brick.Main
 import Brick.Types
 import Brick.Themes
 import Brick.Widgets.Core
-import Graphics.Vty.Input.Events
+import Brick.Forms
+import Graphics.Vty.Input.Events as IE
 import System.Posix.Internals (statGetType)
 import Graphics.Vty (standout)
+import Network.Curl
+
+-- str 
+-- vBox 
+
+startPageUI :: String
+startPageUI ="Search for a subreddit"
 
 tui :: IO()
 tui = do
@@ -15,11 +23,12 @@ tui = do
     endState <- defaultMain tuiApp initialState
     print endState
 
-data TuiState =
-    TuiState
-    deriving (Show, Eq)
+data TuiState = TuiState
+    {tuiStateGreeting :: [String]}
+    deriving(Show, Eq)
 
-type ResourceName = String
+type ResourceName = String 
+
 
 tuiApp :: App TuiState e ResourceName
 tuiApp = 
@@ -32,10 +41,11 @@ tuiApp =
         }
 
 buildInitialState :: IO TuiState
-buildInitialState = pure TuiState
+buildInitialState = do
+    pure TuiState {tuiStateGreeting = startPageUI:[]}
 
 drawTui :: TuiState -> [Widget ResourceName]
-drawTui _ts = []
+drawTui ts = [vBox $ map str $ tuiStateGreeting ts]
 
 handleTuiEvent :: TuiState -> BrickEvent name event -> EventM name (Next TuiState)
 handleTuiEvent state event =
