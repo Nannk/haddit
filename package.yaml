@@ -25,7 +25,7 @@ dependencies:
 - brick
 - curl
 - vty
-- directory
+- cursor
 
 library:
   source-dirs: src

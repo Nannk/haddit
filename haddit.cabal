@@ -35,7 +35,7 @@ library
       base >=4.7 && <5
     , brick
     , curl
-    , directory
+    , cursor
     , hip
     , vty
   default-language: Haskell2010
@@ -51,7 +51,7 @@ executable haddit-exe
       base >=4.7 && <5
     , brick
     , curl
-    , directory
+    , cursor
     , haddit
     , hip
     , vty
@@ -69,7 +69,7 @@ test-suite haddit-test
       base >=4.7 && <5
     , brick
     , curl
-    , directory
+    , cursor
     , haddit
     , hip
     , vty

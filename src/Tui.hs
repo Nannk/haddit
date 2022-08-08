@@ -1,23 +1,22 @@
 module Tui where
+
 import Cursor.Simple.List.NonEmpty
 
-import Brick.AttrMap
 import Brick.Main
+import Brick.AttrMap
 import Brick.Types
-import Brick.Themes
 import Brick.Widgets.Core
 import Brick.Forms
-import Graphics.Vty.Input.Events as IE
-import System.Posix.Internals (statGetType)
-import Graphics.Vty (standout)
-import Network.Curl
 
-    -- Data Section 
--- test data
-startPageUI :: String
-startPageUI ="Search for a subreddit"
+import Graphics.Vty.Input.Events
 
-        -- every comment in this section is tui related, no web stuff
+import Graphics.Image
+import Graphics.Image.IO
+
+import Prelude as P
+
+import Network.Curl 
+
     -- UIInputs: user -> pc 
 -- 1 Hotkeys 
 quitKey = 'q'
@@ -25,59 +24,79 @@ nextPostKey = 'l'
 previousPostKey = 'k'
 
 -- 2 subreddit/post/user search (Form)
-stringInputForm :: Form String  (*)
 
 -- 3 choose an element from the list (subreddit/post/comment) (Cursor)
+
+srString :: String
+srString = getLine
+
     -- UIOutputs
 -- 1 List of interactible elements (subreddits/posts)
 -- 2 List of elements (comments)
 -- 3 Images (embedded in posts)
 
-tui :: IO()
+
+tui::IO ()
 tui = do
-    initialState <- buildInitialState
-    endState <- defaultMain tuiApp initialState
-    print endState
+    initialState <- buildInitialState  
+    finalState <- defaultMain uiApp initialState
+    print finalState
 
-data TuiState = TuiState --datastructure of all tui states
-    {
-    tuiStateGreeting :: [String]
-    
-    }
-    deriving(Show, Eq)
-
--- Just a placeholder from the tutorial for convinience
-    -- probably wouldnt need it 
-type ResourceName = String 
-
-
--- the main App that conrols the resources 
-tuiApp :: App TuiState e ResourceName
-tuiApp = 
-    App
-        { appDraw = drawTui
-        , appChooseCursor = showFirstCursor
-        , appHandleEvent = handleTuiEvent
-        , appStartEvent = pure 
-        , appAttrMap = const $ attrMap mempty []
+-- configuration on what to do 
+uiApp :: App UIStates event_type String
+uiApp =
+    App { appDraw           = drawUI
+        , appChooseCursor   = showcursorUI
+        , appHandleEvent    = handleEvent
+        , appStartEvent     = pure 
+        , appAttrMap        = const $ attrMap mempty []--idk what to write here
         }
 
-buildInitialState :: IO TuiState
+-- datastructure of UIStates 
+data UIStates =
+    UIStates { uiDefaultState :: [String]
+          -- , uiInputState   :: NonEmptyCursor String -- do i even need this input state?
+             , uiCursorState  :: NonEmptyCursor String
+             , uiImageState   :: Image VU RGB Int
+             }
+             deriving(Show, Eq)
+
+buildInitialState :: IO UIStates
 buildInitialState = do
-    pure TuiState {tuiStateGreeting = startPageUI:[]}
+    pure UIStates {uiDefaultState = "test":[]}
 
-drawTui :: TuiState -> [Widget ResourceName]
-drawTui ts = [vBox $ map str $ tuiStateGreeting ts]
+-- definitions of all the functions from uiApp
+drawUI :: UIStates -> [Widget String]
+drawUI ts = [vBox $ P.map str $ uiDefaultState ts]
 
-handleTuiEvent :: TuiState -> BrickEvent name event -> EventM name (Next TuiState)
-handleTuiEvent state event =
+-- handles all events
+handleEvent :: UIStates -> BrickEvent name event -> EventM name (Next UIStates)
+handleEvent state event =
     case event of
-      VtyEvent vtyevent -> 
-          case vtyevent of 
-            EvKey (KChar 'q') [] -> halt state
+      VtyEvent vtye ->
+          case vtye of
+            EvKey (KChar quitKey) [] -> halt state
             _-> continue state
-      _-> continue state
+      _-> continue state 
+
+
+showcursorUI = showFirstCursor
 
 
 
+--getSubredditSearchResults :: String -> [String]
+--getSubredditSearchResults sr =  
 
+split :: (Char -> Bool) -> String -> [String]
+split p s =  case dropWhile p s of
+                      "" -> []
+                      s' -> w : split p s''
+                            where (w, s'') = break p s'
+
+sToURL :: String -> URLString
+sToURL sr = url 
+    where
+        url = "https://www.reddit.com/search/?q="++sr++"&type=sr" :: URLString
+
+getSrHtml :: String -> String    
+getSrHtml sr = snd pure (curlGetString (sToURL sr) [] )
