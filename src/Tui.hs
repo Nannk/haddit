@@ -10,10 +10,8 @@ import Brick.Forms
 
 import Graphics.Vty.Input.Events
 
-import Graphics.Image
-import Graphics.Image.IO
-
 import Prelude as P
+import Control.Monad.IO.Class
 
 import Network.Curl 
 
@@ -27,7 +25,7 @@ previousPostKey = 'k'
 
 -- 3 choose an element from the list (subreddit/post/comment) (Cursor)
 
-srString :: String
+srString :: IO String
 srString = getLine
 
     -- UIOutputs
@@ -46,7 +44,7 @@ tui = do
 uiApp :: App UIStates event_type String
 uiApp =
     App { appDraw           = drawUI
-        , appChooseCursor   = showcursorUI
+        , appChooseCursor   = showFirstCursor
         , appHandleEvent    = handleEvent
         , appStartEvent     = pure 
         , appAttrMap        = const $ attrMap mempty []--idk what to write here
@@ -76,27 +74,34 @@ handleEvent state event =
       VtyEvent vtye ->
           case vtye of
             EvKey (KChar quitKey) [] -> halt state
+            EvKey (KChar 't') [] -> 
+                
+
             _-> continue state
       _-> continue state 
-
-
-showcursorUI = showFirstCursor
-
 
 
 --getSubredditSearchResults :: String -> [String]
 --getSubredditSearchResults sr =  
 
+
+-- split the get request result
 split :: (Char -> Bool) -> String -> [String]
 split p s =  case dropWhile p s of
                       "" -> []
                       s' -> w : split p s''
                             where (w, s'') = break p s'
 
+
+-- build an address for a get request
 sToURL :: String -> URLString
 sToURL sr = url 
     where
         url = "https://www.reddit.com/search/?q="++sr++"&type=sr" :: URLString
 
-getSrHtml :: String -> String    
-getSrHtml sr = snd pure (curlGetString (sToURL sr) [] )
+
+-- make a Get for a list of sr and save the result
+getSrHtml :: String -> IO String    
+getSrHtml sr = do
+    (a, b) <- curlGetString (sToURL sr) []
+    (return b) :: IO String
