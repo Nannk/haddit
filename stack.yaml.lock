@@ -39,6 +39,13 @@ packages:
       sha256: d79395e6ec9caf1132a7e001f6fe9b8ebada31e0e52087a4a1a971e3f295a7f4
   original:
     hackage: hip-1.5.6.0
+- completed:
+    hackage: haddock-api-2.25.1@sha256:37839471c3a5937d6a12e6a17cedd2e58ba98d235ee7f6f66293408b9bb9717f,6061
+    pantry-tree:
+      size: 4598
+      sha256: 74e9ee4972c8adc384db394247c6bfea99d62ddd9c805cced96fe67d686477ac
+  original:
+    hackage: haddock-api-2.25.1
 snapshots:
 - completed:
     size: 619161

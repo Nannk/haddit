@@ -1,5 +1,7 @@
 module Tui where
 
+import Web
+
 import Cursor.Simple.List.NonEmpty
 
 import Brick.Main
@@ -79,29 +81,3 @@ handleEvent state event =
 
             _-> continue state
       _-> continue state 
-
-
---getSubredditSearchResults :: String -> [String]
---getSubredditSearchResults sr =  
-
-
--- split the get request result
-split :: (Char -> Bool) -> String -> [String]
-split p s =  case dropWhile p s of
-                      "" -> []
-                      s' -> w : split p s''
-                            where (w, s'') = break p s'
-
-
--- build an address for a get request
-sToURL :: String -> URLString
-sToURL sr = url 
-    where
-        url = "https://www.reddit.com/search/?q="++sr++"&type=sr" :: URLString
-
-
--- make a Get for a list of sr and save the result
-getSrHtml :: String -> IO String    
-getSrHtml sr = do
-    (a, b) <- curlGetString (sToURL sr) []
-    (return b) :: IO String

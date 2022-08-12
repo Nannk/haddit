@@ -27,6 +27,7 @@ library
   exposed-modules:
       Lib
       Tui
+      Web
   other-modules:
       Paths_haddit
   hs-source-dirs:
