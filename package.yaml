@@ -26,6 +26,8 @@ dependencies:
 - curl
 - vty
 - cursor
+- regex-base
+- regex-tdfa
 
 library:
   source-dirs: src

@@ -1,10 +1,10 @@
-
-
 module Web where
 
 import Prelude as P
 import Control.Monad.IO.Class
 
+import Text.Regex.Base
+import Text.Regex.TDFA
 import Network.Curl 
 import Graphics.Vty.Input.Terminfo (functionKeyCapsTable)
 import Graphics.Vty (initialAssumedState)
